@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# palette-lab
 
-## Getting Started
+Image color extraction playground for testing light/dark mode palette behavior.
 
-First, run the development server:
+Upload any image — the app extracts a full palette using **node-vibrant** (a port of Android's Palette API), then shows how those colors behave as a header background in both light and dark mode.
+
+## What it does
+
+- Extracts 6 semantic swatches: `Vibrant`, `DarkVibrant`, `LightVibrant`, `Muted`, `DarkMuted`, `LightMuted`
+- Applies `DarkVibrant` to a dark-mode header preview
+- Applies `LightVibrant` to a light-mode header preview
+- If `LightVibrant` is null (common for minimal/monochrome artwork), derives a tint: takes the `Vibrant` hue and sets saturation to 18%, lightness to 95% — avoids the Apple Music iOS 26 mistake of blasting a raw mid-tone color onto a white background
+- Code view shows the full JSON output including which values were extracted vs. derived
+
+## Stack
+
+- **Next.js 15** (App Router, TypeScript)
+- **node-vibrant** — Android Palette API port for JS
+- **sharp** — image resize before extraction (reduces pixel count ~95%, cuts extraction time from ~500ms to ~100ms)
+- **Tailwind CSS**
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How the extraction pipeline works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+Upload image
+→ sharp.resize(150, 150)             # downsample for performance
+→ Vibrant.from(buffer).getPalette()
+→ Extract DarkVibrant + LightVibrant (+ fallback derivation if null)
+→ Apply to header preview
+```
 
-## Learn More
+In production, this runs once on image upload and the result is stored in the database — extraction never happens at page-render time.
 
-To learn more about Next.js, take a look at the following resources:
+## Key references
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [node-vibrant docs](https://vibrant.dev)
+- [Android Palette API](https://developer.android.com/develop/ui/views/graphics/palette-colors) — the algorithm this is based on
+- [Spotify color algorithm (reverse-engineered)](https://inobtenio.com/en/posts/spotify-song-colors/)
