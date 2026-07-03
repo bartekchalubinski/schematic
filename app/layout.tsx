@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "palette-lab",
-  description: "Image color extraction playground — light/dark mode palette testing",
+  title: "schematic",
+  description: "UI component schema inspector and renderer",
 };
 
 export default function RootLayout({

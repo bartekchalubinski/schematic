@@ -51,7 +51,7 @@ export function Extractor() {
       <header className="border-b border-[#e0e0e0] bg-white px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-full bg-black" />
-          <span className="text-[13px] font-semibold tracking-tight text-black">palette-lab</span>
+          <span className="text-[13px] font-semibold tracking-tight text-black">schematic</span>
         </div>
         <div className="flex items-center gap-1 text-[11px] text-[#aaa]">
           <span>node-vibrant 4.0.4</span>
