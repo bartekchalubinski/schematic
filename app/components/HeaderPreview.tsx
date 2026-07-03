@@ -37,10 +37,10 @@ export function HeaderPreview({ imageUrl, color, mode, isDerived }: HeaderPrevie
     avatarBg:        dk ? "#6e6e6e"                 : "#c4c4c4",
   };
 
-  // Header gradient — radial glow bleeds down, fades to transparent so it merges into the panel bg below
+  // Header gradient — color at top, panel bg at bottom so it merges seamlessly into the chat area
   const headerGradient = color
-    ? `radial-gradient(ellipse 160% 280% at 55% -5%, ${color}cc 0%, ${color}55 35%, transparent 65%)`
-    : "transparent";
+    ? `linear-gradient(to bottom, ${color} 0%, ${tokens.panelBg} 100%)`
+    : tokens.panelBg;
 
   // Top scroll-fade: solid bg at top → transparent at bottom (messages disappear under header)
   const topFade = `linear-gradient(to bottom, rgba(${tokens.fadeRgb},0.97) 0%, rgba(${tokens.fadeRgb},0.6) 60%, transparent 100%)`;
@@ -105,10 +105,10 @@ export function HeaderPreview({ imageUrl, color, mode, isDerived }: HeaderPrevie
         style={{ top: 0, height: 116, background: topFade }}
       />
 
-      {/* ─── HEADER — layer 1: color gradient background (taller than header so it fades smoothly into chat area) ─── */}
+      {/* ─── HEADER — layer 1: color → panel bg gradient, exactly header height ─── */}
       <div
         className="absolute top-0 left-0 right-0 z-10 pointer-events-none"
-        style={{ height: 220, background: headerGradient }}
+        style={{ height: 92, background: headerGradient }}
       />
 
       {/* ─── HEADER — layer 2: coin info ─── */}
