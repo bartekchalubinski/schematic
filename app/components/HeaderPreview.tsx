@@ -185,7 +185,7 @@ export function HeaderPreview({ imageUrl, color, mode, isDerived }: HeaderPrevie
             }}
           >
             <span className="text-[11px]" style={{ color: tokens.secondary }}>
-              Supply Control · <span style={{ color: tokens.primary }}>COHERENCE</span>
+              App · <span style={{ color: tokens.primary }}>COHERENCE</span>
             </span>
           </div>
           <div
