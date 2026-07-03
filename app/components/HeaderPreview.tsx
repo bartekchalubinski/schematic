@@ -99,10 +99,10 @@ export function HeaderPreview({ imageUrl, color, mode, isDerived }: HeaderPrevie
         </div>
       </div>
 
-      {/* ─── TOP SCROLL FADE (header/content boundary) ─── */}
+      {/* ─── TOP SCROLL FADE (sits below the header, fades chat content as it scrolls up) ─── */}
       <div
         className="absolute left-0 right-0 pointer-events-none z-20"
-        style={{ top: 0, height: 116, background: topFade }}
+        style={{ top: 92, height: 40, background: topFade }}
       />
 
       {/* ─── HEADER — layer 1: color → panel bg gradient, exactly header height ─── */}
