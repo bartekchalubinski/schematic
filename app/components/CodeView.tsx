@@ -9,12 +9,8 @@ interface CodeViewProps {
 export function CodeView({ palette }: CodeViewProps) {
   const data = {
     extracted: {
-      vibrant: palette.vibrant?.hex ?? null,
       darkVibrant: palette.darkVibrant?.hex ?? null,
       lightVibrant: palette.lightVibrant?.hex ?? null,
-      muted: palette.muted?.hex ?? null,
-      darkMuted: palette.darkMuted?.hex ?? null,
-      lightMuted: palette.lightMuted?.hex ?? null,
     },
     applied: {
       darkMode: palette.darkModeColor,

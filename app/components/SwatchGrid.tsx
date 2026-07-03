@@ -6,16 +6,7 @@ interface SwatchGridProps {
   palette: Palette;
 }
 
-const SWATCH_LABELS: { key: keyof Pick<Palette, "vibrant" | "darkVibrant" | "lightVibrant" | "muted" | "darkMuted" | "lightMuted">; label: string; role: string }[] = [
-  { key: "vibrant", label: "Vibrant", role: "Primary accent" },
-  { key: "darkVibrant", label: "Dark Vibrant", role: "Dark mode header" },
-  { key: "lightVibrant", label: "Light Vibrant", role: "Light mode header" },
-  { key: "muted", label: "Muted", role: "Secondary bg" },
-  { key: "darkMuted", label: "Dark Muted", role: "Dark secondary" },
-  { key: "lightMuted", label: "Light Muted", role: "Light secondary" },
-];
-
-function SwatchCard({ swatch, label, role }: { swatch: Swatch | null; label: string; role: string }) {
+function SwatchCard({ swatch, label, role, derived }: { swatch: Swatch | null; label: string; role: string; derived?: boolean }) {
   return (
     <div className="flex items-center gap-3">
       <div
@@ -29,7 +20,10 @@ function SwatchCard({ swatch, label, role }: { swatch: Swatch | null; label: str
         )}
       </div>
       <div className="min-w-0">
-        <div className="text-[11px] font-semibold text-[#333] leading-tight">{label}</div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[11px] font-semibold text-[#333] leading-tight">{label}</span>
+          {derived && <span className="text-[9px] text-[#aaa] border border-[#e0e0e0] px-1 rounded">derived</span>}
+        </div>
         <div className="text-[10px] text-[#aaa] mt-0.5 leading-tight">{role}</div>
         {swatch && (
           <div className="text-[10px] font-mono text-[#888] mt-0.5">
@@ -47,14 +41,8 @@ function SwatchCard({ swatch, label, role }: { swatch: Swatch | null; label: str
 export function SwatchGrid({ palette }: SwatchGridProps) {
   return (
     <div className="space-y-3">
-      {SWATCH_LABELS.map(({ key, label, role }) => (
-        <SwatchCard
-          key={key}
-          swatch={palette[key]}
-          label={label}
-          role={role}
-        />
-      ))}
+      <SwatchCard swatch={palette.darkVibrant} label="Dark Vibrant" role="Dark mode header" />
+      <SwatchCard swatch={palette.lightVibrant} label="Light Vibrant" role="Light mode header" derived={palette.lightModeIsDerived} />
     </div>
   );
 }

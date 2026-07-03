@@ -10,16 +10,11 @@ export interface Swatch {
 }
 
 export interface Palette {
-  vibrant: Swatch | null;
   darkVibrant: Swatch | null;
   lightVibrant: Swatch | null;
-  muted: Swatch | null;
-  darkMuted: Swatch | null;
-  lightMuted: Swatch | null;
-  // Derived: what to actually apply in each mode
   darkModeColor: string | null;
   lightModeColor: string | null;
-  lightModeIsDerived: boolean; // true = LightVibrant was null, fallback used
+  lightModeIsDerived: boolean;
 }
 
 export async function extractPalette(formData: FormData): Promise<Palette> {
@@ -49,9 +44,6 @@ export async function extractPalette(formData: FormData): Promise<Palette> {
   const vibrant = toSwatch(raw.Vibrant);
   const darkVibrant = toSwatch(raw.DarkVibrant);
   const lightVibrant = toSwatch(raw.LightVibrant);
-  const muted = toSwatch(raw.Muted);
-  const darkMuted = toSwatch(raw.DarkMuted);
-  const lightMuted = toSwatch(raw.LightMuted);
 
   // Dark mode: prefer DarkVibrant, fall back to Vibrant
   const darkModeColor = darkVibrant?.hex ?? vibrant?.hex ?? null;
@@ -68,12 +60,8 @@ export async function extractPalette(formData: FormData): Promise<Palette> {
   }
 
   return {
-    vibrant,
     darkVibrant,
     lightVibrant,
-    muted,
-    darkMuted,
-    lightMuted,
     darkModeColor,
     lightModeColor,
     lightModeIsDerived,
