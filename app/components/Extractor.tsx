@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { extractPalette, type Palette } from "../actions/extract";
+import { extractPalette, type Palette, type ExtractionMethod } from "../actions/extract";
 import { HeaderPreview } from "./HeaderPreview";
 import { SwatchGrid } from "./SwatchGrid";
 import { CodeView } from "./CodeView";
@@ -9,28 +9,44 @@ import { CodeView } from "./CodeView";
 type View = "preview" | "code";
 type Mode = "light" | "dark";
 
+const METHODS: { value: ExtractionMethod; label: string; description: string }[] = [
+  { value: "vibrant", label: "Vibrant", description: "Semantic swatches — node-vibrant" },
+  { value: "dominant", label: "Dominant", description: "Most pixels — k-means by count" },
+  { value: "vivid", label: "Vivid", description: "Most saturated — k-means by chroma" },
+];
+
 export function Extractor() {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<Mode>("dark");
   const [view, setView] = useState<View>("preview");
+  const [method, setMethod] = useState<ExtractionMethod>("vibrant");
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const currentImageBuffer = useRef<File | null>(null);
 
-  const handleFile = useCallback(async (file: File) => {
-    if (!file.type.startsWith("image/")) return;
-    const url = URL.createObjectURL(file);
-    setImageUrl(url);
+  const runExtraction = useCallback(async (file: File, m: ExtractionMethod) => {
     setPalette(null);
     setLoading(true);
-
     const formData = new FormData();
     formData.append("image", file);
-    const result = await extractPalette(formData);
+    const result = await extractPalette(formData, m);
     setPalette(result);
     setLoading(false);
   }, []);
+
+  const handleFile = useCallback(async (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    currentImageBuffer.current = file;
+    setImageUrl(URL.createObjectURL(file));
+    await runExtraction(file, method);
+  }, [method, runExtraction]);
+
+  const handleMethodChange = useCallback(async (m: ExtractionMethod) => {
+    setMethod(m);
+    if (currentImageBuffer.current) await runExtraction(currentImageBuffer.current, m);
+  }, [runExtraction]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -137,6 +153,24 @@ export function Extractor() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Controls */}
           <div className="flex items-center gap-3 px-6 py-3 border-b border-[#e0e0e0] bg-white">
+            {/* Method toggle */}
+            <div className="flex items-center rounded-lg border border-[#e8e8e8] overflow-hidden text-[12px] font-medium">
+              {METHODS.map((m) => (
+                <button
+                  key={m.value}
+                  onClick={() => handleMethodChange(m.value)}
+                  title={m.description}
+                  className={`px-3 py-1.5 transition-colors ${
+                    method === m.value ? "bg-black text-white" : "text-[#888] hover:text-black"
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="w-px h-4 bg-[#e8e8e8]" />
+
             {/* Mode toggle */}
             <div className="flex items-center rounded-lg border border-[#e8e8e8] overflow-hidden text-[12px] font-medium">
               {(["dark", "light"] as Mode[]).map((m) => (

@@ -41,8 +41,8 @@ function SwatchCard({ swatch, label, role, derived }: { swatch: Swatch | null; l
 export function SwatchGrid({ palette }: SwatchGridProps) {
   return (
     <div className="space-y-3">
-      <SwatchCard swatch={palette.darkVibrant} label="Dark Vibrant" role="Dark mode header" />
-      <SwatchCard swatch={palette.lightVibrant} label="Light Vibrant" role="Light mode header" derived={palette.lightModeIsDerived} />
+      <SwatchCard swatch={palette.darkVibrant} label="Dark" role="Dark mode header" />
+      <SwatchCard swatch={palette.lightVibrant} label="Light" role="Light mode header" derived={palette.lightModeIsDerived} />
     </div>
   );
 }
