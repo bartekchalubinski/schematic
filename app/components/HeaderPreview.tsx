@@ -39,7 +39,7 @@ export function HeaderPreview({ imageUrl, color, mode, isDerived }: HeaderPrevie
 
   // Header gradient — color at top, panel bg at bottom so it merges seamlessly into the chat area
   const headerGradient = color
-    ? `linear-gradient(to bottom, ${color} 0%, ${tokens.panelBg} 100%)`
+    ? `linear-gradient(to bottom, ${color}b3 0%, ${tokens.panelBg} 100%)`
     : tokens.panelBg;
 
   // Top scroll-fade: solid bg at top → transparent at bottom (messages disappear under header)
